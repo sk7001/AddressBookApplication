@@ -31,30 +31,18 @@ public class AddressBookController {
     @GetMapping("/get/{id}")
     public ResponseEntity<AddressBook> getById(@PathVariable Long id) {
         AddressBook entry = service.getById(id);
-        if (entry != null) {
-            return ResponseEntity.ok(entry);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(entry);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<AddressBook> update(@PathVariable Long id, @Valid @RequestBody AddressBookDTO dto) {
-        AddressBook entry = service.updateEntry(id, dto);
-        if (entry != null) {
-            return ResponseEntity.ok(entry);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        AddressBook entry = service.updateEntry(id, dto); 
+        return ResponseEntity.ok(entry);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        boolean removed = service.deleteEntry(id);
-        if (removed) {
-            return ResponseEntity.ok("Deleted successfully");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        service.deleteEntry(id);
+        return ResponseEntity.ok("Deleted successfully");
     }
 }

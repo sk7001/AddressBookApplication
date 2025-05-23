@@ -1,9 +1,9 @@
 package com.addressBookApp.service;
 
 import com.addressBookApp.dto.AddressBookDTO;
+import com.addressBookApp.exception.AddressBookException;
 import com.addressBookApp.model.AddressBook;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -32,21 +32,20 @@ public class AddressBookService implements IAddressBookService {
         return addressBooks.stream()
                 .filter(entry -> entry.getId().equals(id))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new AddressBookException("Address Book entry with ID " + id + " not found"));
     }
 
     @Override
     public AddressBook updateEntry(Long id, AddressBookDTO dto) {
         AddressBook entry = getById(id);
-        if (entry != null) {
-            entry.setName(dto.getName());
-            entry.setPhone(dto.getPhone());
-        }
+        entry.setName(dto.getName());
+        entry.setPhone(dto.getPhone());
         return entry;
     }
 
     @Override
     public boolean deleteEntry(Long id) {
-        return addressBooks.removeIf(entry -> entry.getId().equals(id));
+        AddressBook entry = getById(id);
+        return addressBooks.remove(entry);
     }
 }
